@@ -1,43 +1,56 @@
-import { View, Text, FlatList, Pressable, ImageBackground } from "react-native";
-import React from "react";
-import AppGradient from "@/components/AppGradient";
-import { StatusBar } from "expo-status-bar";
-import { MEDITATION_DATA } from "@/constants/MeditationData";
-import MEDITATION_IMAGES from "@/constants/meditation-images";
 import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar } from "expo-status-bar";
+import { Href, router } from "expo-router";
+import React from "react";
+import {
+  FlatList,
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
-const NatureMeditate = () => {
+import MEDITATION_IMAGES from "@/constants/meditation-images";
+
+import { MEDITATION_DATA, MeditationType } from "@/constants/MeditationData";
+import AppGradient from "@/components/AppGradient";
+
+const Page = () => {
   return (
     <View className="flex-1">
-      <AppGradient colors={["#161b2e", "#0a4d4a", "#766e67"]}>
+      <AppGradient
+        // Background Linear Gradient
+        colors={["#161b2e", "#0a4d4a", "#766e67"]}
+      >
         <View className="mb-6">
           <Text className="text-gray-200 mb-3 font-bold text-4xl text-left">
-            Welcome Ozan
+            Welcome Steven
           </Text>
           <Text className="text-indigo-100 text-xl font-medium">
             Start your meditation practice today
           </Text>
         </View>
-
         <View>
           <FlatList
             data={MEDITATION_DATA}
-            className="mb-20"
+            contentContainerStyle={styles.list}
             keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <Pressable
-                onPress={() => console.log("press")}
-                className="h-48 my-3 rounded md overflow-hidden"
+                onPress={() => router.push(`/meditate/${item.id}` as Href)}
+                className="h-48 my-3 rounded-md overflow-hidden"
               >
                 <ImageBackground
                   source={MEDITATION_IMAGES[item.id - 1]}
                   resizeMode="cover"
-                  className="flex-1 rounded-lg justify-center"
+                  style={styles.backgroundImage}
                 >
                   <LinearGradient
+                    // Gradient from transparent to black
                     colors={["transparent", "rgba(0,0,0,0.8)"]}
-                    className="flex-1 justify-center items-center"
+                    style={styles.gradient}
                   >
                     <Text className="text-gray-100 text-3xl font-bold text-center">
                       {item.title}
@@ -49,10 +62,32 @@ const NatureMeditate = () => {
           />
         </View>
       </AppGradient>
-
       <StatusBar style="light" />
     </View>
   );
 };
 
-export default NatureMeditate;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  background: {
+    flex: 1,
+  },
+  backgroundImage: {
+    flex: 1,
+    borderRadius: 10,
+    justifyContent: "center",
+  },
+  gradient: {
+    alignItems: "center",
+    height: "100%",
+    justifyContent: "center",
+    width: "100%",
+  },
+  list: {
+    paddingBottom: 150,
+  },
+});
+
+export default Page;
